@@ -17,6 +17,10 @@ public class Controller {
         this.genderIndex = genderIndex;
         this.countryIndex = countryIndex;
         this.gradeIndex = gradeIndex;
+
+        JDBC jdbc = new JDBC();
+        jdbc.connectMySQL();
+        jdbc.disconnectMySQL();
     }
 
 
@@ -220,4 +224,11 @@ public class Controller {
         return null;
     }
 
+
+//    public void printBitmapIndex(BitSet bitSet) {
+//        int i = bitSet.nextSetBit(0);
+//        while (i != -1) {
+//            System.out.println();
+//        }
+//    }
 }
