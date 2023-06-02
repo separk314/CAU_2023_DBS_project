@@ -23,4 +23,8 @@ public class Customer {
     String getGender()  {   return this.gender; }
     String getCountry() {   return this.country;    }
     int getGrade()  {   return this.grade;   }
+
+    public String toString() {
+        return String.format("이름: %s, 성별: %s, 국가: %s, 고객 등급: %d" , name, gender, country, grade);
+    }
 }
