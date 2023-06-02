@@ -1,9 +1,11 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Bitmap {
+public class Bitmap implements Serializable {
+    private static final long serialID = 1L;
     private Map<String, BitSet> index = new HashMap<>();
     private String bitmapName;
 

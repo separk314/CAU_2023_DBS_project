@@ -1,14 +1,26 @@
+import java.io.*;
 import java.util.*;
 
 public class Controller {
     static int serialId = 0;
 
     static Scanner scanner = new Scanner(System.in);
-    static Bitmap genderIndex = new Bitmap("genderIndex");
-    static Bitmap countryIndex = new Bitmap("countryIndex");
-    static Bitmap gradeIndex = new Bitmap("gradeIndex");
+    Bitmap genderIndex;
+    Bitmap countryIndex;
+    Bitmap gradeIndex;
 
-    static void addTuple() {
+    static String genderIndexFileName = "genderIndex.bin";
+    static String countryIndexFileName = "countryIndex.bin";
+    static String gradeIndexFileName = "gradeIndex.bin";
+
+    Controller(Bitmap genderIndex, Bitmap countryIndex, Bitmap gradeIndex) {
+        this.genderIndex = genderIndex;
+        this.countryIndex = countryIndex;
+        this.gradeIndex = gradeIndex;
+    }
+
+
+    void addTuple() {
         System.out.println("< 생성할 고객 정보를 입력해주세요 >");
         System.out.print("고객 이름을 입력하세요: ");
         String name = scanner.next();
@@ -53,7 +65,8 @@ public class Controller {
 
         serialId++;
     }
-    static void multipleKeyQuery() {
+
+    void multipleKeyQuery() {
         Map<Bitmap, String> queries = new HashMap<>();
         String genderQuery = "";
         String countryQuery = "";
@@ -140,7 +153,7 @@ public class Controller {
         System.out.println("\n"+ MultiKeyresult.getIndex().get("queryResult"));
     }
 
-    static void countQuery() {
+    void countQuery() {
         while (true) {
             System.out.println("집계 함수를 실행할 column을 선택하세요.");
             System.out.println("1. gender(성별)");
@@ -182,48 +195,29 @@ public class Controller {
         }
     }
 
-    public static void main(String[] args) {
-        while (true) {
-            System.out.println("\n< 고객 관리 Application >");
-            System.out.println("1. record 삽입");
-            System.out.println("2. DB에 있는 bitmap index 확인");
-            System.out.println("3. multiple-key 질의");
-            System.out.println("4. 집계함수 count(*) 처리");
-            System.out.println("5. 종료");
-            System.out.print("숫자를 입력해주세요: ");
+    static void saveBitmapIndex(Bitmap bitmap, String path) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(path)) {
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(bitmap);
+            System.out.println(path+": index 저장");
 
-            int result = scanner.nextInt();
-
-            if (result == 1) {
-                addTuple();
-
-            } else if (result == 2) {
-                System.out.println("gender, country, grade index가 있습니다.");
-
-            } else if (result == 3) {
-                multipleKeyQuery();
-
-            } else if (result == 4) {
-                countQuery();
-
-            } else if (result == 5) {
-                System.out.println("< 종료 >");
-                break;
-            } else {
-                System.out.println("\n<Invalid Input> 다시 입력해주세요");
-            }
+        } catch (IOException error) {
+            System.out.println(error);
+            error.printStackTrace();
         }
     }
+
+    static Bitmap readBitmapIndex(String path) {
+        try (FileInputStream fileInputStream = new FileInputStream(path)) {
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            Bitmap bitmap = (Bitmap) objectInputStream.readObject();
+            System.out.println(path+": index 읽어오기");
+            return bitmap;
+        } catch (IOException | ClassNotFoundException error) {
+            System.out.println(error);
+            error.printStackTrace();
+        }
+        return null;
+    }
+
 }
-//
-//        queryMap.put(countryIndex, "Japan");
-//
-//        Bitmap result = genderIndex.processMultipleKeyQuery(queryMap);
-//        if (result != null) {
-//            System.out.println("Result: " + result.getIndex().get("queryResult"));
-//        } else {
-//            System.out.println("No result found.");
-//        }
-//    }
-//}
-//
