@@ -1,15 +1,11 @@
 public class Main {
     public static void main(String[] args) {
-//        Bitmap genderIndex = new Bitmap("genderIndex");
-//        Controller.saveBitmapIndex(genderIndex, "genderIndex.bin");
-//        Controller.saveBitmapIndex(genderIndex, "countryIndex.bin");
-//        Controller.saveBitmapIndex(genderIndex, "gradeIndex.bin");
-        Bitmap genderIndex = Controller.readBitmapIndex(Controller.genderIndexFileName);
-        Bitmap countryIndex = Controller.readBitmapIndex(Controller.countryIndexFileName);
-        Bitmap gradeIndex = Controller.readBitmapIndex(Controller.gradeIndexFileName);
-//        Bitmap genderIndex = new Bitmap("genderIndex");
-//        Bitmap countryIndex = new Bitmap("countryIndex");
-//        Bitmap gradeIndex = new Bitmap("gradeIndex");
+//        Bitmap genderIndex = Controller.readBitmapIndex(Controller.genderIndexFileName);
+//        Bitmap countryIndex = Controller.readBitmapIndex(Controller.countryIndexFileName);
+//        Bitmap gradeIndex = Controller.readBitmapIndex(Controller.gradeIndexFileName);
+        Bitmap genderIndex = new Bitmap("genderIndex");
+        Bitmap countryIndex = new Bitmap("countryIndex");
+        Bitmap gradeIndex = new Bitmap("gradeIndex");
 
         Controller controller = new Controller(genderIndex, countryIndex, gradeIndex);
 
@@ -37,11 +33,9 @@ public class Main {
                 controller.countQuery();
 
             } else if (result == 5) {
-                System.out.println("< 종료 >");
-                Controller.saveBitmapIndex(genderIndex, "genderIndex.bin");
-                Controller.saveBitmapIndex(countryIndex, "countryIndex.bin");
-                Controller.saveBitmapIndex(gradeIndex, "gradeIndex.bin");
+                controller.exit();
                 break;
+
             } else {
                 System.out.println("\n<Invalid Input> 다시 입력해주세요");
             }

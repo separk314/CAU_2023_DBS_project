@@ -17,7 +17,7 @@ public class Customer {
     }
 
     void setSerialId(int serialId) {    this.serialId = serialId;   }
-    int getSerialId(int serialId) { return this.serialId;   }
+    int getSerialId() { return this.serialId;   }
 
     String getName() {  return this.name;   }
     String getGender()  {   return this.gender; }

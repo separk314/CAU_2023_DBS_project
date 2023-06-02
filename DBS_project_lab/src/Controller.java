@@ -8,6 +8,7 @@ public class Controller {
     Bitmap genderIndex;
     Bitmap countryIndex;
     Bitmap gradeIndex;
+    JDBC jdbc;
 
     static String genderIndexFileName = "genderIndex.bin";
     static String countryIndexFileName = "countryIndex.bin";
@@ -18,9 +19,10 @@ public class Controller {
         this.countryIndex = countryIndex;
         this.gradeIndex = gradeIndex;
 
-        JDBC jdbc = new JDBC();
-        jdbc.connectMySQL();
-        jdbc.disconnectMySQL();
+        jdbc = new JDBC();
+        jdbc.connectMySQL();    // MySQL 연결
+        jdbc.connectDatabase(); // CustomerDatabse 연결
+        jdbc.createBPlusTreeIndex();    // B+tree index가 생성되어 있지 않다면 생성
     }
 
 
@@ -60,14 +62,20 @@ public class Controller {
         }
 
         Customer customer = new Customer(serialId, serialId, name, gender, country, grade);
-        System.out.println("< 고객 생성 완료 >");
         System.out.println(customer);
 
+        // MySQL 데이터베이스에 레코드 삽입
+        jdbc.insertRecord(customer);
+
+        // bitmap index 업데이트
         genderIndex.add(gender, serialId);
         countryIndex.add(country, serialId);
         gradeIndex.add(String.valueOf(grade), serialId);
 
         serialId++;
+
+        System.out.println("< 고객 생성 완료 >");
+
     }
 
     void multipleKeyQuery() {
@@ -222,6 +230,15 @@ public class Controller {
             error.printStackTrace();
         }
         return null;
+    }
+
+    public void exit() {
+        System.out.println("< 종료 >");
+        Controller.saveBitmapIndex(genderIndex, "genderIndex.bin");
+        Controller.saveBitmapIndex(countryIndex, "countryIndex.bin");
+        Controller.saveBitmapIndex(gradeIndex, "gradeIndex.bin");
+
+        jdbc.disconnectMySQL();
     }
 
 
