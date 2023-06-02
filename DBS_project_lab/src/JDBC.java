@@ -115,6 +115,30 @@ public class JDBC {
         }
     }
 
+    public void executeGenderCountQueryWithBPlusIndex(String gender) {
+        try {
+            String sql = "SELECT COUNT(*) AS total_count FROM customer WHERE gender = ?";
+            long startTime = System.currentTimeMillis();
+
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, gender);
+            ResultSet resultSet = pstmt.executeQuery();
+
+            if (resultSet.next()) {
+                int totalCount = resultSet.getInt("total_count");
+                System.out.println("Total Count: " + totalCount);
+            }
+
+            long endTime = System.currentTimeMillis();
+            long executionTime = endTime - startTime;
+
+            System.out.println("B+tree index를 사용한 시간: " + executionTime + " ms");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void disconnectMySQL() {
         try {
             if (con != null)    con.close();

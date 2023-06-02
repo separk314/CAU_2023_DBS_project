@@ -26,7 +26,8 @@ public class Controller {
     }
 
 
-    void addTuple() {
+
+    void addOneTuple() {
         System.out.println("< 생성할 고객 정보를 입력해주세요 >");
         System.out.print("고객 이름을 입력하세요: ");
         String name = scanner.next();
@@ -76,6 +77,43 @@ public class Controller {
 
         System.out.println("< 고객 생성 완료 >");
 
+    }
+
+    void addTuplesAuto() {
+        // 10000개의 레코드를 생성합니다.
+        for (int i=0; i<10000; i++) {
+            String name = "customerName";
+
+            String gender;
+            if (i%2 == 0)   gender = "f";
+            else gender = "m";
+
+            String country;
+            int grade = i%4 + 1;
+            if (i < 1000) {
+                country = "Korea";
+            } else if (i < 2000) {
+                country = "Japan";
+            } else if (i < 3000) {
+                country = "USA";
+            } else if (i < 4000) {
+                country = "UK";
+            } else {
+                country = "Frence";
+            }
+
+            Customer customer = new Customer(serialId, serialId, name, gender, country, grade);
+
+            // MySQL 데이터베이스에 레코드 삽입
+            jdbc.insertRecord(customer);
+
+            // bitmap index 업데이트
+            genderIndex.add(gender, serialId);
+            countryIndex.add(country, serialId);
+            gradeIndex.add(String.valueOf(grade), serialId);
+
+            serialId++;
+        }
     }
 
     void multipleKeyQuery() {
@@ -142,7 +180,13 @@ public class Controller {
         }
 
         // Result
+        long startTime = System.currentTimeMillis();
         Bitmap MultiKeyresult = genderIndex.processMultipleKeyQuery(queries);
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+
+        System.out.println("Bitmap index를 사용한 시간: " + executionTime + " ms");
+
         if (MultiKeyresult == null) {
             System.out.println("< 입력한 Query가 없습니다. >");
             return;
@@ -163,6 +207,9 @@ public class Controller {
         }
 
         System.out.println("\n"+ MultiKeyresult.getIndex().get("queryResult"));
+
+        System.out.println("B+tree index를 사용한 시간: " + executionTime + " ms");
+
     }
 
     void countQuery() {
@@ -177,9 +224,25 @@ public class Controller {
                 System.out.println("gender key값을 입력하세요: 남자는 1, 여자는 2를 선택");
                 int genderScan = scanner.nextInt();
                 if (genderScan == 1) {
+                    long startTime = System.currentTimeMillis();
                     System.out.println(genderIndex.processCountQuery("m"));
+                    long endTime = System.currentTimeMillis();
+                    long executionTime = endTime - startTime;
+
+                    System.out.println("Bitmap index를 사용한 시간: " + executionTime + " ms");
+
+                    jdbc.executeGenderCountQueryWithBPlusIndex("m");
+
                 } else if (genderScan == 2) {
-                    System.out.println(genderIndex.processCountQuery("f"));
+                    long startTime = System.currentTimeMillis();
+                    System.out.println("Query 결과: "+genderIndex.processCountQuery("f"));
+                    long endTime = System.currentTimeMillis();
+                    long executionTime = endTime - startTime;
+
+                    System.out.println("Bitmap index를 사용한 시간: " + executionTime + " ms");
+
+                    jdbc.executeGenderCountQueryWithBPlusIndex("f");
+
                 } else {
                     System.out.println("< Invalid input >");
                 }
@@ -188,7 +251,9 @@ public class Controller {
             } else if (result == 2) {
                 System.out.print("country key값을 입력하세요: ");
                 String countryScan = scanner.next();
-                System.out.println(countryIndex.processCountQuery(countryScan));
+                int countQueryResult = countryIndex.processCountQuery(countryScan);
+                System.out.println(countQueryResult);
+
                 break;
 
             } else if (result == 3) {
@@ -232,6 +297,7 @@ public class Controller {
         return null;
     }
 
+
     public void exit() {
         System.out.println("< 종료 >");
         Controller.saveBitmapIndex(genderIndex, "genderIndex.bin");
@@ -241,11 +307,4 @@ public class Controller {
         jdbc.disconnectMySQL();
     }
 
-
-//    public void printBitmapIndex(BitSet bitSet) {
-//        int i = bitSet.nextSetBit(0);
-//        while (i != -1) {
-//            System.out.println();
-//        }
-//    }
 }

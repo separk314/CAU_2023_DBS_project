@@ -1,11 +1,11 @@
 public class Main {
     public static void main(String[] args) {
-//        Bitmap genderIndex = Controller.readBitmapIndex(Controller.genderIndexFileName);
-//        Bitmap countryIndex = Controller.readBitmapIndex(Controller.countryIndexFileName);
-//        Bitmap gradeIndex = Controller.readBitmapIndex(Controller.gradeIndexFileName);
-        Bitmap genderIndex = new Bitmap("genderIndex");
-        Bitmap countryIndex = new Bitmap("countryIndex");
-        Bitmap gradeIndex = new Bitmap("gradeIndex");
+        Bitmap genderIndex = Controller.readBitmapIndex(Controller.genderIndexFileName);
+        Bitmap countryIndex = Controller.readBitmapIndex(Controller.countryIndexFileName);
+        Bitmap gradeIndex = Controller.readBitmapIndex(Controller.gradeIndexFileName);
+//        Bitmap genderIndex = new Bitmap("genderIndex");
+//        Bitmap countryIndex = new Bitmap("countryIndex");
+//        Bitmap gradeIndex = new Bitmap("gradeIndex");
 
         Controller controller = new Controller(genderIndex, countryIndex, gradeIndex);
 
@@ -15,13 +15,14 @@ public class Main {
             System.out.println("2. DB에 있는 bitmap index 확인");
             System.out.println("3. multiple-key 질의");
             System.out.println("4. 집계함수 count(*) 처리");
-            System.out.println("5. 종료");
+            System.out.println("5. 튜플 자동 생성(10000개의 튜플 생성)");
+            System.out.println("6. 종료");
             System.out.print("숫자를 입력해주세요: ");
 
             int result = controller.scanner.nextInt();
 
             if (result == 1) {
-                controller.addTuple();
+                controller.addOneTuple();
 
             } else if (result == 2) {
                 System.out.println("gender, country, grade index가 있습니다.");
@@ -33,6 +34,9 @@ public class Main {
                 controller.countQuery();
 
             } else if (result == 5) {
+                controller.addTuplesAuto();
+
+            } else if (result == 6) {
                 controller.exit();
                 break;
 

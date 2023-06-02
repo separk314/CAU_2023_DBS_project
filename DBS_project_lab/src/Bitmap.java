@@ -55,7 +55,8 @@ public class Bitmap implements Serializable {
         if(index.get(key) == null) {
             return 0;
         } else {
-            return index.get(key).cardinality();
+            int result = index.get(key).cardinality();
+            return result;
         }
     }
 
