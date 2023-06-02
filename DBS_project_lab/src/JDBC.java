@@ -115,6 +115,24 @@ public class JDBC {
         }
     }
 
+    public void executeMultipleKeyQueryWithBPlusIndex(String sql) {
+        try {
+            long startTime = System.currentTimeMillis();
+
+            Statement stmt = con.createStatement();
+            stmt.executeQuery(sql);
+
+            long endTime = System.currentTimeMillis();
+            long executionTime = endTime - startTime;
+
+            System.out.println("- B+tree index를 사용한 시간: " + executionTime + " ms");
+
+        } catch (SQLException error) {
+            error.printStackTrace();
+        }
+
+    }
+
     public void executeGenderCountQueryWithBPlusIndex(String gender) {
         try {
             String sql = "SELECT COUNT(*) AS total_count FROM customer WHERE gender = ?";
@@ -126,7 +144,7 @@ public class JDBC {
 
             if (resultSet.next()) {
                 int totalCount = resultSet.getInt("total_count");
-                System.out.println("Total Count: " + totalCount);
+                System.out.println("Total Count(B+tree): " + totalCount);
             }
 
             long endTime = System.currentTimeMillis();

@@ -15,7 +15,7 @@ public class Main {
             System.out.println("2. DB에 있는 bitmap index 확인");
             System.out.println("3. multiple-key 질의");
             System.out.println("4. 집계함수 count(*) 처리");
-            System.out.println("5. 튜플 자동 생성(10000개의 튜플 생성)");
+            System.out.println("5. 튜플 자동 생성(20000개의 튜플 생성)");
             System.out.println("6. 종료");
             System.out.print("숫자를 입력해주세요: ");
 

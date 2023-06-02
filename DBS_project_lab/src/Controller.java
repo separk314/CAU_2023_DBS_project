@@ -80,8 +80,8 @@ public class Controller {
     }
 
     void addTuplesAuto() {
-        // 10000개의 레코드를 생성합니다.
-        for (int i=0; i<10000; i++) {
+        // 20000개의 레코드를 생성합니다.
+        for (int i=0; i<20000; i++) {
             String name = "customerName";
 
             String gender;
@@ -90,16 +90,14 @@ public class Controller {
 
             String country;
             int grade = i%4 + 1;
-            if (i < 1000) {
+            if (i < 5000) {
                 country = "Korea";
-            } else if (i < 2000) {
+            } else if (i < 10000) {
                 country = "Japan";
-            } else if (i < 3000) {
+            } else if (i < 15000) {
                 country = "USA";
-            } else if (i < 4000) {
-                country = "UK";
             } else {
-                country = "Frence";
+                country = "UK";
             }
 
             Customer customer = new Customer(serialId, serialId, name, gender, country, grade);
@@ -118,9 +116,9 @@ public class Controller {
 
     void multipleKeyQuery() {
         Map<Bitmap, String> queries = new HashMap<>();
-        String genderQuery = "";
-        String countryQuery = "";
-        String gradeQuery = "";
+        String genderQuery = null;
+        String countryQuery = null;
+        String gradeQuery = null;
 
         // Gender
         System.out.println("gender에 대한 질의를 생성하시겠습니까?");
@@ -158,9 +156,9 @@ public class Controller {
             String countryResult = scanner.next();
 
             queries.put(countryIndex, countryResult);
-            countryQuery = "country="+countryResult;
+            countryQuery = "country=\""+countryResult+"\"";
         } else {
-            System.out.println("gender에 대한 질의를 생성하지 않음.");
+            System.out.println("country에 대한 질의를 생성하지 않음.");
         }
 
         // Grade
@@ -174,7 +172,7 @@ public class Controller {
             int gradeResult = scanner.nextInt();
 
             queries.put(gradeIndex, String.valueOf(gradeResult));
-            gradeQuery = "grade="+gradeResult;
+            gradeQuery = "grade="+gradeResult+"";
         } else {
             System.out.println("gender에 대한 질의를 생성하지 않음.");
         }
@@ -185,31 +183,31 @@ public class Controller {
         long endTime = System.currentTimeMillis();
         long executionTime = endTime - startTime;
 
-        System.out.println("Bitmap index를 사용한 시간: " + executionTime + " ms");
-
         if (MultiKeyresult == null) {
             System.out.println("< 입력한 Query가 없습니다. >");
             return;
         }
 
         System.out.println("< Result >");
-        System.out.print("SELECT * \nFROM CUSTOMER \nWHERE ");
-        if (genderQuery != "") {
-            System.out.print(gradeQuery);
-            if (countryQuery != "" || gradeQuery != "") System.out.print(" AND ");
+        String sqlString = "SELECT * FROM CUSTOMER WHERE ";
+
+        if (genderQuery != null) {
+            sqlString = sqlString + genderQuery;
+            if (countryQuery != null || gradeQuery != null) sqlString = sqlString + " AND ";
         }
-        if (countryQuery != "") {
-            System.out.print(countryQuery);
-            if (gradeQuery != "") System.out.print("AND");
+        if (countryQuery != null) {
+            sqlString = sqlString + countryQuery;
+            if (gradeQuery != null) sqlString = sqlString + " AND ";
         }
-        if (gradeQuery != "") {
-            System.out.print(gradeQuery);
+        if (gradeQuery != null) {
+            sqlString = sqlString + gradeQuery;
         }
 
+        System.out.println(sqlString);
+
+        System.out.println("\n- Bitmap index를 사용한 시간: " + executionTime + " ms");
+        jdbc.executeMultipleKeyQueryWithBPlusIndex(sqlString);
         System.out.println("\n"+ MultiKeyresult.getIndex().get("queryResult"));
-
-        System.out.println("B+tree index를 사용한 시간: " + executionTime + " ms");
-
     }
 
     void countQuery() {
@@ -225,7 +223,7 @@ public class Controller {
                 int genderScan = scanner.nextInt();
                 if (genderScan == 1) {
                     long startTime = System.currentTimeMillis();
-                    System.out.println(genderIndex.processCountQuery("m"));
+                    System.out.println("Total Count(Bitmap):"+ genderIndex.processCountQuery("m"));
                     long endTime = System.currentTimeMillis();
                     long executionTime = endTime - startTime;
 
@@ -235,7 +233,7 @@ public class Controller {
 
                 } else if (genderScan == 2) {
                     long startTime = System.currentTimeMillis();
-                    System.out.println("Query 결과: "+genderIndex.processCountQuery("f"));
+                    System.out.println("Total Count(Bitmap):"+ genderIndex.processCountQuery("f"));
                     long endTime = System.currentTimeMillis();
                     long executionTime = endTime - startTime;
 
