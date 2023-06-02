@@ -174,7 +174,7 @@ public class Controller {
             queries.put(gradeIndex, String.valueOf(gradeResult));
             gradeQuery = "grade="+gradeResult+"";
         } else {
-            System.out.println("gender에 대한 질의를 생성하지 않음.");
+            System.out.println("grade에 대한 질의를 생성하지 않음.");
         }
 
         // Result

@@ -1,11 +1,11 @@
 public class Main {
     public static void main(String[] args) {
-        Bitmap genderIndex = Controller.readBitmapIndex(Controller.genderIndexFileName);
-        Bitmap countryIndex = Controller.readBitmapIndex(Controller.countryIndexFileName);
-        Bitmap gradeIndex = Controller.readBitmapIndex(Controller.gradeIndexFileName);
-//        Bitmap genderIndex = new Bitmap("genderIndex");
-//        Bitmap countryIndex = new Bitmap("countryIndex");
-//        Bitmap gradeIndex = new Bitmap("gradeIndex");
+//        Bitmap genderIndex = Controller.readBitmapIndex(Controller.genderIndexFileName);
+//        Bitmap countryIndex = Controller.readBitmapIndex(Controller.countryIndexFileName);
+//        Bitmap gradeIndex = Controller.readBitmapIndex(Controller.gradeIndexFileName);
+        Bitmap genderIndex = new Bitmap("genderIndex");
+        Bitmap countryIndex = new Bitmap("countryIndex");
+        Bitmap gradeIndex = new Bitmap("gradeIndex");
 
         Controller controller = new Controller(genderIndex, countryIndex, gradeIndex);
 
