@@ -10,7 +10,7 @@ public class JDBC {
     public void connectMySQL() {
         String server = "localhost";
         String userName = "root";
-        String password = "qlalfqjsgh314.";
+        String password = "EnterYourPassword";
 
         // JDBC 드라이버
         try {
